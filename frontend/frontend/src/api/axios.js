@@ -8,7 +8,12 @@ const api = axios.create({
 // Attach access token
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("access");
-  if (token) {
+  
+  // Do NOT attach tokens to these endpoints
+  const publicEndpoints = ["/register/", "/token/", "/token/refresh/"];
+  const isPublic = publicEndpoints.some(endpoint => config.url.includes(endpoint));
+
+  if (token && !isPublic) {
     config.headers.Authorization = `Bearer ${token}`;
   }
   return config;
