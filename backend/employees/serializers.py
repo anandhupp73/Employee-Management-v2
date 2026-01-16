@@ -24,10 +24,19 @@ class EmployeeSerializer(serializers.ModelSerializer):
 
 
 class WorksSerializer(serializers.ModelSerializer):
+    lead = LeadSerializer(read_only=True) 
+    
+    lead_id = serializers.PrimaryKeyRelatedField(
+        queryset=Lead.objects.all(), 
+        source='lead', 
+        write_only=True, 
+        required=False,
+        allow_null=True 
+    )
+    
     class Meta:
         model = Works
-        fields = '__all__'
-
+        fields = ['work_id', 'work_name', 'description', 'lead', 'lead_id', 'created_at']
 
 class AssignedWorkSerializer(serializers.ModelSerializer):
     employee_name = serializers.CharField(
