@@ -1,3 +1,4 @@
+from . import api_views
 from rest_framework.routers import DefaultRouter
 from django.urls import path, include
 from .api_views import (
@@ -16,5 +17,7 @@ router.register(r'assigned', AssignedWorkViewSet, basename='assignedwork')
 
 urlpatterns = [
     path('register/', register_user, name='register_user'),
+    path('assigned/<int:pk>/complete/', api_views.mark_completed_api),
+    path('assigned/<int:pk>/delete/', api_views.delete_assigned_api),
     path('', include(router.urls)),
 ]

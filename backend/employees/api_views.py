@@ -67,3 +67,22 @@ def register_user(request):
         return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
     except Exception as e:
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+@api_view(['PATCH'])
+def mark_completed_api(request, pk):
+    try:
+        assign = AssignedWork.objects.get(pk=pk)
+        assign.is_completed = True
+        assign.save()
+        return Response({"message": "Marked as completed"})
+    except AssignedWork.DoesNotExist:
+        return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
+    
+@api_view(['DELETE'])
+def delete_assigned_api(request, pk):
+    try:
+        assign = AssignedWork.objects.get(pk=pk)
+        assign.delete()
+        return Response({"message": "Deleted"})
+    except AssignedWork.DoesNotExist:
+        return Response({"error": "Not found"}, status=status.HTTP_404_NOT_FOUND)
