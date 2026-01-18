@@ -45,15 +45,16 @@ export default function AssignWork() {
         setError("");
 
         try {
-            await api.post("/assigned-works/", {
-                employee: form.employee,
-                work: form.work
+            await api.post("/assigned/", {
+                employee: Number(form.employee),
+                work: Number(form.work),
             });
 
-            navigate("/dashboard", { state: { activeTab: 'assigned' } });
+            localStorage.setItem("currentTab", "assigned");
+            navigate("/dashboard");
         } catch (err) {
             console.error("Submission error:", err.response?.data);
-            setError("Error assigning work. Check console for details.");
+            setError("Invalid employee or work selection.");
         } finally {
             setLoading(false);
         }
@@ -129,7 +130,7 @@ export default function AssignWork() {
                             >
                                 <option value="">-- Choose Work to Assign --</option>
                                 {works.map(w => (
-                                    <option key={w.id || w.pk} value={w.id || w.pk}>
+                                    <option key={w.work_id} value={w.work_id}>
                                         {w.work_name} {w.lead ? `(Lead: ${w.lead.lead_name})` : ''}
                                     </option>
                                 ))}

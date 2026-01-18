@@ -4,16 +4,16 @@ import api from "../api/axios"; // Your axios instance
 import { User, Phone, DollarSign, Building, Users, Camera, ArrowLeft, Save, Loader2 } from "lucide-react";
 
 // The base URL where your Django server is running
-const BASE_URL = "http://127.0.0.1:8000"; 
+const BASE_URL = "http://127.0.0.1:8000";
 
 export default function UpdateEmployee() {
   const { id } = useParams();
   const navigate = useNavigate();
-  
+
   const [leads, setLeads] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-  
+
   const [form, setForm] = useState({
     emp_name: "",
     emp_mob: "",
@@ -33,7 +33,7 @@ export default function UpdateEmployee() {
           api.get(`/employees/${id}/`),
           api.get("/leads/"),
         ]);
-        
+
         const data = empRes.data;
         setForm({
           emp_name: data.emp_name,
@@ -41,14 +41,14 @@ export default function UpdateEmployee() {
           emp_salary: data.emp_salary,
           department: data.department,
           lead: data.lead ? data.lead.lead_id : "",
-          profile_photo: null, 
+          profile_photo: null,
         });
 
         // Handle the photo URL logic
         if (data.profile_photo) {
           // If the API returns a relative path like /media/..., prepend the BASE_URL
-          const fullUrl = data.profile_photo.startsWith("http") 
-            ? data.profile_photo 
+          const fullUrl = data.profile_photo.startsWith("http")
+            ? data.profile_photo
             : `${BASE_URL}${data.profile_photo}`;
           setExistingPhotoUrl(fullUrl);
         }
@@ -74,34 +74,39 @@ export default function UpdateEmployee() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setSaving(true);
-    
+
     const formData = new FormData();
     formData.append("emp_name", form.emp_name);
     formData.append("emp_mob", form.emp_mob);
     formData.append("emp_salary", form.emp_salary);
     formData.append("department", form.department);
-    formData.append("lead", form.lead);
-    
-    // Only append photo if a new one was selected
+
+    if (form.lead) {
+      formData.append("lead_id", form.lead);
+    }
+
     if (form.profile_photo) {
       formData.append("profile_photo", form.profile_photo);
     }
 
     try {
-      await api.put(`/employees/${id}/`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      navigate("/employees");
+      await api.patch(`/employees/${id}/`, formData);
+
+      localStorage.setItem("currentTab", "employees");
+
+      navigate("/dashboard");
     } catch (err) {
-      alert("Error updating employee. Please try again.");
+      console.error(err.response?.data);
+      alert("Update failed");
     } finally {
       setSaving(false);
     }
+
   };
 
   if (loading) return (
     <div className="flex h-screen items-center justify-center">
-        <Loader2 className="animate-spin text-indigo-600" size={40} />
+      <Loader2 className="animate-spin text-indigo-600" size={40} />
     </div>
   );
 
@@ -145,7 +150,7 @@ export default function UpdateEmployee() {
                 <label className="text-sm font-bold text-slate-600">Employee Name</label>
                 <div className="relative">
                   <User className="absolute left-4 top-3 text-slate-400" size={18} />
-                  <input type="text" required value={form.emp_name} onChange={(e) => setForm({...form, emp_name: e.target.value})} className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:border-indigo-500 outline-none" />
+                  <input type="text" required value={form.emp_name} onChange={(e) => setForm({ ...form, emp_name: e.target.value })} className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:border-indigo-500 outline-none" />
                 </div>
               </div>
 
@@ -153,7 +158,7 @@ export default function UpdateEmployee() {
                 <label className="text-sm font-bold text-slate-600">Mobile</label>
                 <div className="relative">
                   <Phone className="absolute left-4 top-3 text-slate-400" size={18} />
-                  <input type="text" required value={form.emp_mob} onChange={(e) => setForm({...form, emp_mob: e.target.value})} className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:border-indigo-500 outline-none" />
+                  <input type="text" required value={form.emp_mob} onChange={(e) => setForm({ ...form, emp_mob: e.target.value })} className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:border-indigo-500 outline-none" />
                 </div>
               </div>
 
@@ -161,7 +166,7 @@ export default function UpdateEmployee() {
                 <label className="text-sm font-bold text-slate-600">Salary</label>
                 <div className="relative">
                   <DollarSign className="absolute left-4 top-3 text-slate-400" size={18} />
-                  <input type="number" required value={form.emp_salary} onChange={(e) => setForm({...form, emp_salary: e.target.value})} className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:border-indigo-500 outline-none" />
+                  <input type="number" required value={form.emp_salary} onChange={(e) => setForm({ ...form, emp_salary: e.target.value })} className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:border-indigo-500 outline-none" />
                 </div>
               </div>
 
@@ -169,7 +174,7 @@ export default function UpdateEmployee() {
                 <label className="text-sm font-bold text-slate-600">Department</label>
                 <div className="relative">
                   <Building className="absolute left-4 top-3 text-slate-400" size={18} />
-                  <input type="text" required value={form.department} onChange={(e) => setForm({...form, department: e.target.value})} className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:border-indigo-500 outline-none" />
+                  <input type="text" required value={form.department} onChange={(e) => setForm({ ...form, department: e.target.value })} className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:border-indigo-500 outline-none" />
                 </div>
               </div>
 
@@ -177,7 +182,7 @@ export default function UpdateEmployee() {
                 <label className="text-sm font-bold text-slate-600">Assigned Lead</label>
                 <div className="relative">
                   <Users className="absolute left-4 top-3 text-slate-400" size={18} />
-                  <select value={form.lead} onChange={(e) => setForm({...form, lead: e.target.value})} className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:border-indigo-500 outline-none appearance-none">
+                  <select value={form.lead} onChange={(e) => setForm({ ...form, lead: e.target.value })} className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:border-indigo-500 outline-none appearance-none">
                     <option value="">Select Lead</option>
                     {leads.map(l => <option key={l.lead_id} value={l.lead_id}>{l.lead_name}</option>)}
                   </select>

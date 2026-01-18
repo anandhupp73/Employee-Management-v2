@@ -27,31 +27,32 @@ const AddWork = () => {
     }, []);
 
     const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+        e.preventDefault();
+        setLoading(true);
+        setError('');
 
-    const cleanedData = {
-        ...formData,
-        lead: formData.lead === "" ? null : formData.lead
-    };
+        const cleanedData = {
+            work_name: formData.work_name,
+            description: formData.description,
+            lead_id: formData.lead === "" ? null : formData.lead
+        };
 
-    try {
-        await api.post('/works/', cleanedData);
-        navigate('/dashboard', { state: { activeTab: 'works' } });
-    } catch (err) {
-        console.error("Django Error Details:", err.response?.data);
-        
-        const serverError = err.response?.data;
-        if (serverError && typeof serverError === 'object') {
-            const firstKey = Object.keys(serverError)[0];
-            setError(`${firstKey}: ${serverError[firstKey][0]}`);
-        } else {
-            setError('Failed to add work. Please check your connection.');
+        try {
+            await api.post('/works/', cleanedData);
+            navigate('/dashboard', { state: { activeTab: 'works' } });
+        } catch (err) {
+            console.error("Django Error Details:", err.response?.data);
+
+            const serverError = err.response?.data;
+            if (serverError && typeof serverError === 'object') {
+                const firstKey = Object.keys(serverError)[0];
+                setError(`${firstKey}: ${serverError[firstKey][0]}`);
+            } else {
+                setError('Failed to add work. Please check your connection.');
+            }
+            setLoading(false);
         }
-        setLoading(false);
-    }
-};
+    };
 
     return (
         <div className="min-h-screen bg-gray-50 p-4 md:p-8 flex flex-col items-center">
@@ -108,7 +109,7 @@ const AddWork = () => {
                             <select
                                 className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none appearance-none"
                                 value={formData.lead}
-                                onChange={(e) => setFormData({ ...formData, lead: e.target.value })}
+                                onChange={(e) => setFormData({ ...formData, lead: Number(e.target.value) })}
                             >
                                 <option value="">Select a Lead</option>
                                 {leads.map(lead => (

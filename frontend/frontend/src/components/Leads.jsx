@@ -22,7 +22,7 @@ const Leads = ({ data, onRefresh }) => {
 
     return(
 
-    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+    <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-x-auto sm:overflow-visible">
         <table className="w-full text-left">
             <thead className="bg-gray-50 border-b border-gray-100">
                 <tr>

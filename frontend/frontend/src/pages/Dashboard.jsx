@@ -32,7 +32,7 @@ const Dashboard = () => {
                 employees: '/employees/',
                 leads: '/leads/',
                 works: '/works/',
-                assigned: '/assigned-works/'
+                assigned: '/assigned/'
             };
             const res = await api.get(endpoints[activeTab]);
 

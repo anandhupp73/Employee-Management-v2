@@ -29,14 +29,14 @@ export default function App() {
           }
         />
 
-        <Route
+        {/* <Route
           path="/employees"
           element={
             <ProtectedRoute>
               <Employees />
             </ProtectedRoute>
           }
-        />
+        /> */}
 
         <Route
           path="/add-employee"
