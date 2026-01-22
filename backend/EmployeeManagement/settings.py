@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-jey+evd4dmx^=yoq_(f81m&z8xz4xn%0gr8lj39hofmj%=b#e+'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['employeemanagement.pythonanywhere.com']
 
 
 # Application definition
@@ -82,12 +82,8 @@ WSGI_APPLICATION = 'EmployeeManagement.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'employee_db',
-        'USER': 'emp_user',
-        'PASSWORD': 'emp_pass',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
