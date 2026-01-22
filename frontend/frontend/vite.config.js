@@ -9,10 +9,10 @@ export default defineConfig({
     react(),
     tailwindcss()
   ],
-   resolve: {
+  base: "/Employee-Management-v2/",
+  resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
     },
   },
-  
 })
