@@ -135,11 +135,6 @@ const EmployeeDetail = () => {
                             label="Department" 
                             value={employee.department || "Not Assigned"} 
                         />
-                        <DetailItem 
-                            icon={<User className="text-purple-500" />} 
-                            label="Reporting To" 
-                            value={employee.lead?.lead_name || "No Team Lead"} 
-                        />
                     </div>
                 </div>
             </div>

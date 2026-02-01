@@ -38,10 +38,7 @@ const Employees = ({ data }) => {
                     </div>
 
                     <div className="text-xs space-y-2 text-gray-500 border-t pt-4">
-                        <div className="flex justify-between">
-                            <span>Lead:</span> 
-                            <span className="text-gray-900 font-semibold">{emp.lead?.lead_name || "N/A"}</span>
-                        </div>
+                        
                         <div className="flex justify-between items-center">
                             <span>Contact:</span>
                             <span className="text-gray-900 font-semibold flex items-center gap-1">

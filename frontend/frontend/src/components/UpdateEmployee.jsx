@@ -19,7 +19,6 @@ export default function UpdateEmployee() {
     emp_mob: "",
     emp_salary: "",
     department: "",
-    lead: "",
     profile_photo: null, // This stores the actual File object for upload
   });
 
@@ -29,9 +28,8 @@ export default function UpdateEmployee() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [empRes, leadsRes] = await Promise.all([
-          api.get(`/employees/${id}/`),
-          api.get("/leads/"),
+        const [empRes] = await Promise.all([
+          api.get(`/employees/${id}/`)
         ]);
 
         const data = empRes.data;
@@ -40,7 +38,6 @@ export default function UpdateEmployee() {
           emp_mob: data.emp_mob,
           emp_salary: data.emp_salary,
           department: data.department,
-          lead: data.lead ? data.lead.lead_id : "",
           profile_photo: null,
         });
 
@@ -53,7 +50,6 @@ export default function UpdateEmployee() {
           setExistingPhotoUrl(fullUrl);
         }
 
-        setLeads(leadsRes.data);
       } catch (err) {
         console.error("Error fetching employee:", err);
       } finally {
@@ -81,9 +77,6 @@ export default function UpdateEmployee() {
     formData.append("emp_salary", form.emp_salary);
     formData.append("department", form.department);
 
-    if (form.lead) {
-      formData.append("lead_id", form.lead);
-    }
 
     if (form.profile_photo) {
       formData.append("profile_photo", form.profile_photo);
@@ -178,16 +171,6 @@ export default function UpdateEmployee() {
                 </div>
               </div>
 
-              <div className="md:col-span-2 space-y-2">
-                <label className="text-sm font-bold text-slate-600">Assigned Lead</label>
-                <div className="relative">
-                  <Users className="absolute left-4 top-3 text-slate-400" size={18} />
-                  <select value={form.lead} onChange={(e) => setForm({ ...form, lead: e.target.value })} className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl focus:border-indigo-500 outline-none appearance-none">
-                    <option value="">Select Lead</option>
-                    {leads.map(l => <option key={l.lead_id} value={l.lead_id}>{l.lead_name}</option>)}
-                  </select>
-                </div>
-              </div>
             </div>
 
             <button disabled={saving} type="submit" className="w-full mt-8 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-2xl transition-all flex items-center justify-center gap-2">

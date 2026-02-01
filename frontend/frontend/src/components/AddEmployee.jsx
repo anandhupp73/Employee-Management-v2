@@ -14,16 +14,9 @@ export default function AddEmployee() {
     emp_mob: "",
     emp_salary: "",
     department: "",
-    lead_id: "", 
     profile_photo: null,
   });
 
-
-  useEffect(() => {
-    api.get("/leads/")
-      .then(res => setLeads(res.data))
-      .catch(err => console.error("Failed to fetch leads", err));
-  }, []);
 
   const handleFileChange = (e) => {
     setForm({ ...form, profile_photo: e.target.files[0] });
@@ -38,7 +31,6 @@ export default function AddEmployee() {
     formData.append("emp_mob", form.emp_mob);
     formData.append("emp_salary", form.emp_salary);
     formData.append("department", form.department);
-    if (form.lead_id) formData.append("lead_id", form.lead_id);
     if (form.profile_photo) formData.append("profile_photo", form.profile_photo);
 
     try {
@@ -116,23 +108,7 @@ export default function AddEmployee() {
                   onChange={(e) => setForm({ ...form, department: e.target.value })} />
               </div>
             </div>
-            {/* Team Lead Select */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Assign Team Lead</label>
-              <div className="relative">
-                <Briefcase className="absolute left-3 top-3 text-gray-400" size={18} />
-                <select 
-                  className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none appearance-none"
-                  onChange={(e) => setForm({ ...form, lead_id: e.target.value })}
-                  value={form.lead_id}
-                >
-                  <option value="">Select a Lead</option>
-                  {leads.map(lead => (
-                    <option key={lead.lead_id} value={lead.lead_id}>{lead.lead_name}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
+            
           </div>
 
           {/* Profile Photo */}
