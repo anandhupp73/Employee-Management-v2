@@ -36,13 +36,6 @@ class Employee(models.Model):
     emp_mob = models.CharField(max_length=15)
     emp_salary = models.IntegerField()
     department = models.CharField(max_length=100, blank=True, null=True)
-    lead = models.ForeignKey(
-        Lead,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name='employees'
-    )
     profile_photo = models.ImageField(upload_to='employee_photos/', null=True, blank=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -50,11 +43,15 @@ class Employee(models.Model):
     def __str__(self):
         return self.emp_name
 
+
 class AssignedWork(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name='assignments')
     work = models.ForeignKey(Works, on_delete=models.CASCADE, related_name='assignments')
     assigned_date = models.DateTimeField(auto_now_add=True)
     is_completed = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ('employee', 'work')
 
     def __str__(self):
         return f'{self.work.work_name} → {self.employee.emp_name}'

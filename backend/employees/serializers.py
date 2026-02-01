@@ -9,13 +9,6 @@ class LeadSerializer(serializers.ModelSerializer):
 
 
 class EmployeeSerializer(serializers.ModelSerializer):
-    lead = LeadSerializer(read_only=True)
-    lead_id = serializers.PrimaryKeyRelatedField(
-        queryset=Lead.objects.all(),
-        source='lead',
-        write_only=True,
-        required=False
-    )
     profile_photo = serializers.ImageField(required=False)
 
     class Meta:
